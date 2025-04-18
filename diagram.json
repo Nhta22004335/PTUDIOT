@@ -1,0 +1,131 @@
+{
+  "version": 1,
+  "author": "Nguyễn Tuấn Anh",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": -48, "left": 81.64, "attrs": {} },
+    { "type": "wokwi-dht22", "id": "dht1", "top": -105.3, "left": 657, "attrs": {} },
+    { "type": "wokwi-gas-sensor", "id": "gas1", "top": -64.5, "left": -165.8, "attrs": {} },
+    {
+      "type": "wokwi-lcd1602",
+      "id": "lcd1",
+      "top": 236.8,
+      "left": 293.6,
+      "attrs": { "pins": "i2c" }
+    },
+    {
+      "type": "wokwi-photoresistor-sensor",
+      "id": "ldr1",
+      "top": 291.2,
+      "left": -200.8,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": 51.95,
+      "left": -144,
+      "attrs": { "value": "10000" }
+    },
+    { "type": "wokwi-potentiometer", "id": "pot1", "top": -193.3, "left": 19, "attrs": {} },
+    {
+      "type": "wokwi-hc-sr04",
+      "id": "ultrasonic1",
+      "top": -382.5,
+      "left": 139.9,
+      "attrs": { "distance": "317" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text1",
+      "top": -441.6,
+      "left": 144,
+      "attrs": { "text": "Cảm Biến Siêu Âm\n- Đo mực nước trong bể." }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text2",
+      "top": -182.4,
+      "left": 643.2,
+      "attrs": { "text": "Cảm Biến Nhiệt Độ và Độ Ẩm\n- Đo nhiệt độ môi trường.\n- Đo độ ẩm không khí." }
+    },
+    { "type": "wokwi-pir-motion-sensor", "id": "pir1", "top": -380, "left": -247.38, "attrs": {} },
+    {
+      "type": "wokwi-text",
+      "id": "text3",
+      "top": -470.4,
+      "left": -412.8,
+      "attrs": {
+        "text": "Cảm Biến Hồng Ngoại\n- Phát hiện sự thay đổi của nhiệt độ \ndo con người hoặc vật thể ấm di chuyển vào vùng quét."
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text4",
+      "top": -249.6,
+      "left": -48,
+      "attrs": { "text": "MP. Cảm Biến Độ Ẩm Đất\n- Đo độ ẩm của đất." }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text5",
+      "top": -124.8,
+      "left": -182.4,
+      "attrs": { "text": "Cảm Biến Khí Gas\n- Đo nồng độ khí CO2." }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text6",
+      "top": 364.8,
+      "left": -182.4,
+      "attrs": { "text": "Cảm Biến Ánh Sáng\n- Đo cường độ ánh sáng." }
+    },
+    { "type": "wokwi-relay-module", "id": "relay1", "top": -28.6, "left": 326.4, "attrs": {} },
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": -80.4,
+      "left": 464.6,
+      "attrs": { "color": "red" }
+    }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "dht1:GND", "esp:GND.3", "black", [ "v0" ] ],
+    [ "dht1:VCC", "esp:5V", "red", [ "v182.4", "h-192", "v-38.4" ] ],
+    [ "dht1:SDA", "esp:4", "green", [ "v86.4", "h-172.7" ] ],
+    [ "gas1:GND", "esp:GND.1", "black", [ "h9.6", "v133.6" ] ],[ "gas1:VCC", "esp:3V3", "red", [ "h0" ] ],
+    [ "gas1:AOUT", "esp:34", "green", [ "h86.4", "v67.2", "h0" ] ],
+    [ "lcd1:SCL", "esp:22", "green", [ "h-96", "v-105.3", "h0" ] ],
+    [ "lcd1:SDA", "esp:21", "green", [ "h-19.2", "v19.4", "h-67.2", "v-86.4" ] ],
+    [ "lcd1:VCC", "esp:5V", "red", [ "h-28.8", "v96.1", "h-192" ] ],
+    [ "lcd1:GND", "esp:GND.2", "black", [ "h-76.8", "v-86.4", "h0", "v-9.6" ] ],
+    [ "ldr1:GND", "esp:GND.1", "black", [ "h115.2", "v-29.2" ] ],
+    [ "ldr1:AO", "esp:35", "green", [ "h76.8", "v-135.1" ] ],
+    [ "ldr1:VCC", "r1:1", "red", [ "h9.6", "v-48", "h-124.8", "v-19.2" ] ],
+    [ "r1:2", "esp:3V3", "green", [ "v-19.2", "h114", "v-96", "h57.45" ] ],
+    [ "pot1:GND", "esp:GND.2", "black", [ "v48", "h57.6", "v57.6" ] ],
+    [ "pot1:VCC", "esp:3V3", "red", [ "v19.2", "h-68", "v0" ] ],
+    [ "pot1:SIG", "esp:32", "green", [ "v48", "h-96.4", "v124.8" ] ],
+    [ "ultrasonic1:VCC", "esp:5V", "red", [ "v19.2", "h-508.8", "v508.8", "h364.8", "v-86.4" ] ],
+    [ "ultrasonic1:GND", "esp:GND.2", "black", [ "v268.8", "h-58.8" ] ],
+    [ "ultrasonic1:TRIG", "esp:5", "green", [ "v355.2", "h-38.8" ] ],
+    [ "esp:18", "ultrasonic1:ECHO", "green", [ "h48", "v-249.6" ] ],
+    [
+      "pir1:VCC",
+      "esp:3V3",
+      "red",
+      [ "v240", "h-38.4", "v0", "h0", "v259.2", "h259.2", "v-76.8", "h57.6", "v-144" ]
+    ],
+    [ "pir1:GND", "esp:GND.1", "black", [ "v307.2", "h57.34" ] ],
+    [ "pir1:OUT", "esp:15", "green", [ "v28.8", "h412.66", "v384" ] ],
+    [ "relay1:IN", "esp:17", "green", [ "h-28.8", "v28.6" ] ],
+    [ "relay1:GND", "esp:GND.2", "black", [ "h0" ] ],
+    [ "relay1:COM", "esp:GND.2", "green", [ "h30", "v-59", "h-249.6", "v0", "h-9.6" ] ],
+    [ "relay1:VCC", "esp:3V3", "red", [ "h-19.2", "v-67.2", "h-201.6" ] ],
+    [ "led1:C", "relay1:NO", "green", [ "v28.8", "h-9.2" ] ],
+    [ "led1:A", "esp:3V3", "green", [ "v-9.6", "h-153.6", "v-38.4", "h-249.6" ] ]
+  ],
+  "dependencies": {}
+}
