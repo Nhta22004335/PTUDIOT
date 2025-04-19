@@ -6,11 +6,6 @@
 #include <DHT_U.h>
 #include <LiquidCrystal_I2C.h>
 
-#include <mysql_driver.h>
-#include <mysql_connection.h>
-#include <cppconn/statement.h>  
-#include <cppconn/resultset.h>
-
 #define DHTTYPE DHT22  // Loại cảm biến: DHT22
 #define DHTPIN 4       // Chân DATA nối với GPIO4 nd và độ ẩm
 
@@ -109,34 +104,6 @@ void setup() {
   pinMode(LDR_PIN, INPUT);
   pinMode(POTE_PIN, INPUT);
   pinMode(PIR_PIN, INPUT);
-  
-  sql::mysql::MySQL_Driver* driver;
-  sql::Connection* conn;
-  sql::Statement* stmt;
-  sql::ResultSet* res;
-
-  // Lấy driver
-  driver = sql::mysql::get_mysql_driver_instance();
-  // Kết nối đến CSDL (user: root, password: , host: localhost)
-  conn = driver->connect("tcp://127.0.0.1:80", "root", "");
-
-  // Chọn database
-  conn->setSchema("iotgraden");
-
-  // Tạo statement và truy vấn
-  stmt = conn->createStatement();
-  res = stmt->executeQuery("SELECT * FROM nguoidung");
-
-  // In kết quả
-  while (res->next()) {
-    Serial.print( "Cột 1: ");
-    Serial.println(res->getString(1));
-  }
-
-  // Giải phóng bộ nhớ
-  delete res;
-  delete stmt;
-  delete conn;
 }
 
 void loop() {
