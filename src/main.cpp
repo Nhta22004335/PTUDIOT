@@ -5,7 +5,8 @@
 #include <DHT.h>
 #include <DHT_U.h>
 #include <LiquidCrystal_I2C.h>
-
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 #define DHTTYPE DHT22  // Loại cảm biến: DHT22
 #define DHTPIN 4       // Chân DATA nối với GPIO4 nd và độ ẩm
 
@@ -73,17 +74,29 @@ void callback(char* topic, byte* message, unsigned int length) {
     Serial.print((char)message[i]);
     stMessage += (char)message[i];
   }
-  Serial.println();
-  // Lặp vô hạn để hiển thị liên tục
-  while (true and st==stMessage) { 
-    for (int i = 0; i < stMessage.length(); i++) {
-      lcd.setCursor(0, 0);
-      // Hiển thị 16 ký tự từ vị trí i
-      lcd.print(stMessage.substring(i, i + 16)); 
-      delay(300);
-      // Khi đến cuối, quay lại từ đầu
-      if (i == stMessage.length() - 16) { 
-        i = -1; 
+
+  // Phân tích chuỗi JSON
+  json doc = json::parse(stMessage);
+
+  int motorbechuanuoc = doc["motorbechuanuoc"];
+  int htphunsuong = doc["htphunsuong"];
+  int quatthongio = doc["quatthongio"];
+  int htdenchieusang = doc["htdenchieusang"];
+  int htledcanhbao = doc["htledcanhbao"];
+  int coibao = doc["coibao"];
+  int htmangche = doc["htmangche"];
+
+  st = stMessage;
+  if (stMessage.length() <= 16) {
+    lcd.setCursor(0, 0);
+    lcd.print(stMessage);  // Không cần cuộn nếu chuỗi ngắn
+  } else {
+    while (st == stMessage) {
+      st = stMessage;
+      for (int i = 0; i <= stMessage.length() - 16; i++) {
+        lcd.setCursor(0, 0);
+        lcd.print(stMessage.substring(i, i + 16));
+        delay(300);
       }
     }
   }
@@ -93,7 +106,7 @@ void setup() {
   Serial.begin(115200);
   WIFIConnect();
   client.setServer(MQTT_Server, Port);
-  //client.setCallback(callback);
+  client.setCallback(callback);
   dht.begin();
   lcd.init();
   lcd.backlight();
@@ -161,19 +174,6 @@ void loop() {
       dad[j] = dad[j+1];
     }
 
-    Serial.print("Nhiệt độ TB: ");
-    Serial.println(tnd);
-    Serial.print("Độ ẩm TB: ");
-    Serial.println(tda);
-    Serial.print("Nồng độ CO2 TB: ");
-    Serial.println(tkhi);
-    Serial.print("Cường độ AS TB: ");
-    Serial.println(tas);
-    Serial.print("Độ ẩm đất TB: ");
-    Serial.println(tdad);
-    Serial.print("Cường độ cảm biến siêu âm TB: ");
-    Serial.println(sieuam);
-
     String jsonData = "{"
     "\"humidity\":" + String(tda/7, 2) + 
     ", \"temperature\":" + String(tnd/7, 2) + 
@@ -186,6 +186,6 @@ void loop() {
     client.publish(MQTT_Topic_Gui, jsonData.c_str());
     tnd=0, tda=0, tkhi=0, tas=0;
   }
-  delay(5000); 
+  delay(5000);
 }
 

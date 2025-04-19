@@ -58,7 +58,7 @@ if (isset($_SESSION['tendn'])) {
       <a href="#" onclick="theodoi()" class="hover:text-green-600 flex items-center gap-x-1 transition">
         <i data-lucide="shopping-bag" class="w-4 h-4"></i>Theo dõi
       </a>
-      <a href="#" class="hover:text-green-600 flex items-center gap-x-1 transition">
+      <a href="#" onclick="dieukhien()" class="hover:text-green-600 flex items-center gap-x-1 transition">
         <i data-lucide="file-text" class="w-4 h-4"></i>Điều khiển
       </a>
       <a href="#" class="hover:text-green-600 flex items-center gap-x-1 transition">

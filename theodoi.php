@@ -283,7 +283,6 @@ function updateSensorValues() {
                 value: input.value
             });
         });
-
         $.ajax({
             url: "capnhatnkcambien.php",
             method: "POST",
