@@ -122,7 +122,6 @@ void loop() {
   
   //CẢM BIẾN ÁNH SÁNG LDR
   float anhsang = analogRead(LDR_PIN);
-  Serial.println(anhsang);
   
   //CẢM BIẾN KHÍ GAS
   float khigas = analogRead(MQ2_PIN);  // Đọc giá trị từ MQ2 khí
@@ -137,56 +136,56 @@ void loop() {
   //CẢM BIẾN ĐỘ ẨM ĐẤT
   float doamdat = analogRead(POTE_PIN);
 
-  // if (i<7) {
-  //   nd[i] = nhietdo;
-  //   da[i] = doam;
-  //   khi[i] = khigas;
-  //   as[i] = anhsang;
-  //   dad[i] = doamdat;
-  // }
-  // i++;
-  // if (i>=7) {
-  //   i=6;
-  //   for (int j=0;j<7;j++) {
-  //     tnd += nd[j];
-  //     tda += da[j];
-  //     tkhi += khi[j];
-  //     tas += as[j];
-  //     tdad += dad[j];
-  //   }
-  //   for (int j=0;j<6;j++) {
-  //     nd[j] = nd[j+1];
-  //     da[j] = da[j+1];
-  //     khi[j] = khi[j+1];
-  //     as[j] = as[j+1];
-  //     dad[j] = dad[j+1];
-  //   }
+  if (i<7) {
+    nd[i] = nhietdo;
+    da[i] = doam;
+    khi[i] = khigas;
+    as[i] = anhsang;
+    dad[i] = doamdat;
+  }
+  i++;
+  if (i>=7) {
+    i=6;
+    for (int j=0;j<7;j++) {
+      tnd += nd[j];
+      tda += da[j];
+      tkhi += khi[j];
+      tas += as[j];
+      tdad += dad[j];
+    }
+    for (int j=0;j<6;j++) {
+      nd[j] = nd[j+1];
+      da[j] = da[j+1];
+      khi[j] = khi[j+1];
+      as[j] = as[j+1];
+      dad[j] = dad[j+1];
+    }
 
-  //   Serial.print("Nhiệt độ TB: ");
-  //   Serial.println(tnd);
-  //   Serial.print("Độ ẩm TB: ");
-  //   Serial.println(tda);
-  //   Serial.print("Nồng độ CO2 TB: ");
-  //   Serial.println(tkhi);
-  //   Serial.print("Cường độ AS TB: ");
-  //   Serial.println(tas);
-  //   Serial.print("Độ ẩm đất TB: ");
-  //   Serial.println(tdad);
-  //   Serial.print("Cường độ cảm biến siêu âm TB: ");
-  //   Serial.println(sieuam);
+    Serial.print("Nhiệt độ TB: ");
+    Serial.println(tnd);
+    Serial.print("Độ ẩm TB: ");
+    Serial.println(tda);
+    Serial.print("Nồng độ CO2 TB: ");
+    Serial.println(tkhi);
+    Serial.print("Cường độ AS TB: ");
+    Serial.println(tas);
+    Serial.print("Độ ẩm đất TB: ");
+    Serial.println(tdad);
+    Serial.print("Cường độ cảm biến siêu âm TB: ");
+    Serial.println(sieuam);
 
-  //   String jsonData = "{"
-  //   "\"humidity\":" + String(tda/7, 2) + 
-  //   ", \"temperature\":" + String(tnd/7, 2) + 
-  //   ", \"anhsang\":" + String(tas/7, 2) +
-  //   ", \"nongdokhi\":" + String(tkhi/7, 2) + 
-  //   ", \"doamdat\":" + String(tdad/7, 2) +
-  //   ", \"sieuam\":" + String(sieuam/7, 2) +
-  //   "}";
+    String jsonData = "{"
+    "\"humidity\":" + String(tda/7, 2) + 
+    ", \"temperature\":" + String(tnd/7, 2) + 
+    ", \"anhsang\":" + String(tas/7, 2) +
+    ", \"nongdokhi\":" + String(tkhi/7, 2) + 
+    ", \"doamdat\":" + String(tdad/7, 2) +
+    ", \"sieuam\":" + String(sieuam/7, 2) +
+    "}";
 
-  //   client.publish(MQTT_Topic_Gui, jsonData.c_str());
-  //   tnd=0, tda=0, tkhi=0, tas=0;
-  // }
+    client.publish(MQTT_Topic_Gui, jsonData.c_str());
+    tnd=0, tda=0, tkhi=0, tas=0;
+  }
   delay(5000); 
 }
 
