@@ -18,7 +18,7 @@ using json = nlohmann::json;
 #define ECHO_PIN 18
 
 #define POTE_PIN 32 //cảm biến độ ẩm đất
-#define PIR_PIN 15  // Chân kết nối với OUT của cảm biến PIR Hồng ngoại
+
 const char * MQTT_Server = "broker.emqx.io";
 const char * MQTT_Topic_Gui = "Nta_22004335_gui";
 const char * MQTT_Topic_Nhan = "Nta_22004335_nhan";  // Chủ đề nhận dữ liệu
