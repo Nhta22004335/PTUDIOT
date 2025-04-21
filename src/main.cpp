@@ -7,7 +7,7 @@
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 #include <nlohmann/json.hpp>
-using json = nlohmann::json;
+// using json = nlohmann::json;
 #define DHTTYPE DHT22  // Loại cảm biến: DHT22
 #define DHTPIN 4       // Chân DATA nối với GPIO4 nd và độ ẩm
 
@@ -110,7 +110,7 @@ void setup() {
   dht.begin();
   // lcd.init();
   // delay(100);
-  lcd.backlight();
+  // lcd.backlight();
   pinMode(TRIG_PIN, OUTPUT);
   pinMode(ECHO_PIN, INPUT);
   pinMode(MQ2_PIN, INPUT);
