@@ -190,6 +190,6 @@ void loop() {
     client.publish(MQTT_Topic_Gui, jsonData.c_str());
     tnd=0, tda=0, tkhi=0, tas=0;
   }
-  //delay(5000);
+  delay(5000);
 }
 
