@@ -4,6 +4,7 @@
 #include <Adafruit_Sensor.h>
 #include <DHT.h>
 #include <DHT_U.h>
+#include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
@@ -14,10 +15,12 @@ using json = nlohmann::json;
 #define LDR_PIN 35  // Chân kết nối LDR ánh sáng
 
 // Cảm biến siêu âm
-#define TRIG_PIN 5
-#define ECHO_PIN 18
+#define TRIG_PIN 13
+#define ECHO_PIN 12
 
 #define POTE_PIN 32 //cảm biến độ ẩm đất
+
+#define PIR_PIN 14 //cảm biến hồng ngoại
 
 const char * MQTT_Server = "broker.emqx.io";
 const char * MQTT_Topic_Gui = "Nta_22004335_gui";
@@ -25,18 +28,14 @@ const char * MQTT_Topic_Nhan = "Nta_22004335_nhan";  // Chủ đề nhận dữ 
 const char * MQTT_ID = "ae56e8c6-447a-49a2-bcf9-704820402c40"; // Tạo ID ngẫu nhiên tại: https://www.guidgen.com/
 
 int i = 0;
-float nd[] = {0,0,0,0,0,0,0,0};
-float da[] = {0,0,0,0,0,0,0,0};
-float khi[] = {0,0,0,0,0,0,0,0};
-float as[] = {0,0,0,0,0,0,0,0};
-float dad[] = {0,0,0,0,0,0,0,0};
+float nd[7], da[7], khi[7], as[7], dad[7];
 float tnd = 0, tda = 0, tkhi = 0, tas = 0, tdad = 0;
 
 int Port = 1883;
 WiFiClient espClient;
 PubSubClient client(espClient);
 DHT dht(DHTPIN, DHTTYPE);
-LiquidCrystal_I2C lcd(0x27, 16, 2);
+// LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 
 void WIFIConnect() {
@@ -54,6 +53,7 @@ void WIFIConnect() {
 
 void MQTT_Reconnect() {
   while (!client.connected()) {
+    Serial.println("Đang kết nối MQTT...");
     if (client.connect(MQTT_ID)) {
       Serial.println("Kết nối thành công!");
       client.subscribe(MQTT_Topic_Nhan); // Đăng ký nhận dữ liệu từ web
@@ -76,47 +76,48 @@ void callback(char* topic, byte* message, unsigned int length) {
   }
 
   // Phân tích chuỗi JSON
-  json doc = json::parse(stMessage);
+  // json doc = json::parse(stMessage);
 
-  int motorbechuanuoc = doc["motorbechuanuoc"];
-  int htphunsuong = doc["htphunsuong"];
-  int quatthongio = doc["quatthongio"];
-  int htdenchieusang = doc["htdenchieusang"];
-  int htledcanhbao = doc["htledcanhbao"];
-  int coibao = doc["coibao"];
-  int htmangche = doc["htmangche"];
+  // int motorbechuanuoc = doc.value("motorbechuanuoc", 0);
+  // int htphunsuong    = doc.value("htphunsuong", 0);
+  // int quatthongio    = doc.value("quatthongio", 0);
+  // int htdenchieusang = doc.value("htdenchieusang", 0);
+  // int htledcanhbao   = doc.value("htledcanhbao", 0);
+  // int coibao         = doc.value("coibao", 0);
+  // int htmangche      = doc.value("htmangche", 0);  
 
-  st = stMessage;
-  if (stMessage.length() <= 16) {
-    lcd.setCursor(0, 0);
-    lcd.print(stMessage);  // Không cần cuộn nếu chuỗi ngắn
-  } else {
-    while (st == stMessage) {
-      st = stMessage;
-      for (int i = 0; i <= stMessage.length() - 16; i++) {
-        lcd.setCursor(0, 0);
-        lcd.print(stMessage.substring(i, i + 16));
-        delay(300);
-      }
-    }
-  }
+  // st = stMessage;
+  // if (stMessage.length() <= 16) {
+  //   lcd.setCursor(0, 0);
+  //   lcd.print(stMessage);  // Không cần cuộn nếu chuỗi ngắn
+  // } else {
+  //   while (st == stMessage) {
+  //     st = stMessage;
+  //     for (int i = 0; i <= stMessage.length() - 16; i++) {
+  //       lcd.setCursor(0, 0);
+  //       lcd.print(stMessage.substring(i, i + 16));
+  //       delay(300);
+  //     }
+  //   }
+  // }
 }
 
 void setup() {
   Serial.begin(115200);
   WIFIConnect();
   client.setServer(MQTT_Server, Port);
-  client.setCallback(callback);
+  // client.setCallback(callback);
   dht.begin();
-  lcd.init();
+  // lcd.init();
+  // delay(100);
   lcd.backlight();
   pinMode(TRIG_PIN, OUTPUT);
   pinMode(ECHO_PIN, INPUT);
-  pinMode(PIR_PIN, INPUT);
   pinMode(MQ2_PIN, INPUT);
   pinMode(LDR_PIN, INPUT);
   pinMode(POTE_PIN, INPUT);
   pinMode(PIR_PIN, INPUT);
+  Serial.println("Setup OK");
 }
 
 void loop() {
@@ -148,6 +149,8 @@ void loop() {
   float sieuam = duration * 0.034 / 2;  // Chuyển đổi sang cm siêu âm
   //CẢM BIẾN ĐỘ ẨM ĐẤT
   float doamdat = analogRead(POTE_PIN);
+  int hongngoai = digitalRead(PIR_PIN);
+  Serial.println(hongngoai);
 
   if (i<7) {
     nd[i] = nhietdo;
@@ -156,6 +159,7 @@ void loop() {
     as[i] = anhsang;
     dad[i] = doamdat;
   }
+
   i++;
   if (i>=7) {
     i=6;
