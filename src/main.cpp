@@ -1,13 +1,13 @@
 #include <Arduino.h>
 #include <WiFi.h>
-#include "PubSubClient.h"
+#include <PubSubClient.h>
 #include <Adafruit_Sensor.h>
 #include <DHT.h>
 #include <DHT_U.h>
 #include <Wire.h>
-#include <LiquidCrystal_I2C.h>
+// #include <LiquidCrystal_I2C.h>
 #include <nlohmann/json.hpp>
-// using json = nlohmann::json;
+using json = nlohmann::json;
 #define DHTTYPE DHT22  // Loại cảm biến: DHT22
 #define DHTPIN 4       // Chân DATA nối với GPIO4 nd và độ ẩm
 
@@ -76,15 +76,15 @@ void callback(char* topic, byte* message, unsigned int length) {
   }
 
   // Phân tích chuỗi JSON
-  // json doc = json::parse(stMessage);
+  json doc = json::parse(stMessage);
 
-  // int motorbechuanuoc = doc.value("motorbechuanuoc", 0);
-  // int htphunsuong    = doc.value("htphunsuong", 0);
-  // int quatthongio    = doc.value("quatthongio", 0);
-  // int htdenchieusang = doc.value("htdenchieusang", 0);
-  // int htledcanhbao   = doc.value("htledcanhbao", 0);
-  // int coibao         = doc.value("coibao", 0);
-  // int htmangche      = doc.value("htmangche", 0);  
+  int motorbechuanuoc = doc.value("motorbechuanuoc", 0);
+  int htphunsuong    = doc.value("htphunsuong", 0);
+  int quatthongio    = doc.value("quatthongio", 0);
+  int htdenchieusang = doc.value("htdenchieusang", 0);
+  int htledcanhbao   = doc.value("htledcanhbao", 0);
+  int coibao         = doc.value("coibao", 0);
+  int htmangche      = doc.value("htmangche", 0);  
 
   // st = stMessage;
   // if (stMessage.length() <= 16) {
@@ -106,7 +106,7 @@ void setup() {
   Serial.begin(115200);
   WIFIConnect();
   client.setServer(MQTT_Server, Port);
-  // client.setCallback(callback);
+  client.setCallback(callback);
   dht.begin();
   // lcd.init();
   // delay(100);
@@ -190,6 +190,6 @@ void loop() {
     client.publish(MQTT_Topic_Gui, jsonData.c_str());
     tnd=0, tda=0, tkhi=0, tas=0;
   }
-  delay(5000);
+  //delay(5000);
 }
 
