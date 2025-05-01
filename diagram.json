@@ -72,7 +72,6 @@
       "left": 589.4,
       "attrs": { "color": "red" }
     },
-    { "type": "wokwi-vcc", "id": "vcc1", "top": -85.64, "left": 336, "attrs": {} },
     {
       "type": "wokwi-text",
       "id": "text1",
