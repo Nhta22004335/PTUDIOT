@@ -128,7 +128,7 @@
       "id": "text10",
       "top": -9.6,
       "left": 556.8,
-      "attrs": { "text": "23" }
+      "attrs": { "text": "17" }
     }
   ],
   "connections": [
@@ -157,7 +157,6 @@
     [ "bz1:1", "esp:GND.1", "green", [ "v0" ] ],
     [ "r1:1", "esp:25", "green", [ "v0" ] ],
     [ "relay1:GND", "esp:GND.1", "black", [ "h-259.2", "v-134.8", "h28.8" ] ],
-    [ "relay1:IN", "esp:23", "green", [ "h0" ] ],
     [ "led1:C", "relay1:NO", "green", [ "v0" ] ],
     [ "relay1:COM", "esp:GND.1", "green", [ "h39.6", "v37", "h-412.8", "v-172.8" ] ],
     [ "led1:A", "esp:3V3", "green", [ "v0", "h19.2", "v-240" ] ],
@@ -168,7 +167,8 @@
     [ "rgb1:COM", "esp:GND.1", "green", [ "v0" ] ],
     [ "r4:1", "esp:19", "green", [ "v0" ] ],
     [ "r2:1", "esp:18", "green", [ "v0" ] ],
-    [ "r3:1", "esp:5", "green", [ "v0" ] ]
+    [ "r3:1", "esp:5", "green", [ "v0" ] ],
+    [ "esp:17", "relay1:IN", "green", [ "h105.6", "v172.8" ] ]
   ],
   "dependencies": {}
 }

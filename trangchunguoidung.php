@@ -61,8 +61,11 @@ if (isset($_SESSION['tendn'])) {
       <a href="#" onclick="dieukhien()" class="hover:text-green-600 flex items-center gap-x-1 transition">
         <i data-lucide="file-text" class="w-4 h-4"></i>Điều khiển
       </a>
-      <a href="#" class="hover:text-green-600 flex items-center gap-x-1 transition">
-        <i data-lucide="grid" class="w-4 h-4"></i>Lịch sử
+      <a href="#" class="hover:text-green-600 flex items-center gap-x-1 transition" style="pointer-events: none;">
+        <i data-lucide="file-text" class="w-4 h-4"></i>Thao tác Telegram
+      </a>
+      <a href="#" class="hover:text-green-600 flex items-center gap-x-1 transition" style="pointer-events: none;">
+        <i data-lucide="grid" class="w-4 h-4"></i>Thống kê
       </a>
     </nav>
     <div class="relative" x-data="{ openUser: false }" @click.outside="openUser = false">
