@@ -5,9 +5,16 @@
 #include <DHT.h>
 #include <DHT_U.h>
 #include <Wire.h>
-// #include <LiquidCrystal_I2C.h>
+#include <LiquidCrystal_I2C.h>
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
+
+#if CONFIG_FREERTOS_UNICORE
+#define ARDUINO_RUNNING_CORE 0
+#else
+#define ARDUINO_RUNNING_CORE 1
+#endif
+
 #define DHTTYPE DHT22  // Loại cảm biến: DHT22
 #define DHTPIN 4       // Chân DATA nối với GPIO4 nd và độ ẩm
 
@@ -35,7 +42,7 @@ int Port = 1883;
 WiFiClient espClient;
 PubSubClient client(espClient);
 DHT dht(DHTPIN, DHTTYPE);
-// LiquidCrystal_I2C lcd(0x27, 16, 2);
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 
 void WIFIConnect() {
@@ -108,9 +115,9 @@ void setup() {
   client.setServer(MQTT_Server, Port);
   client.setCallback(callback);
   dht.begin();
-  // lcd.init();
-  // delay(100);
-  // lcd.backlight();
+  lcd.init();
+  delay(100);
+  lcd.backlight();
   pinMode(TRIG_PIN, OUTPUT);
   pinMode(ECHO_PIN, INPUT);
   pinMode(MQ2_PIN, INPUT);
