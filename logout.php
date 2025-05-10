@@ -22,6 +22,6 @@ if (isset($_COOKIE['user_id'])) {
 }
 
 // Chuyển hướng người dùng trở lại trang chủ
-header('Location: trangchu.html');
+header('Location: trangchu.php');
 exit();
 ?>

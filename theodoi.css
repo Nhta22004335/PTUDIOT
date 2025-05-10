@@ -1,268 +1,263 @@
-
+/* Font và màu sắc tổng thể */
 body {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #e6f4ea, #f8fff9);
+    color: #1e7e34;
+    min-height: 90vh;
     margin: 0;
-    padding: 0;
-    color: #333;
+
     background-image: url('picture/bg.jpg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-
+    background-size: cover;         /* Phủ toàn bộ màn hình */
+    background-position: center;    /* Căn giữa */
+    background-repeat: no-repeat;   /* Không lặp lại */
 }
 
-h2 {    
-    font-size: 2.2em;
-    color: #fff;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-    margin-bottom: 20px;
-}
-#main-content {
-    display: flex;
-    flex-direction: column; /* Để các phần tử con xếp theo chiều dọc */
-    align-items: center; /* Căn giữa */
-    padding-bottom: 50px; /* Đảm bảo có khoảng cách dưới cho nút */
-}
-.sensor-container {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    width: 90%;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-#back-button-container {
-    width: 100%;
-    display: flex;
-    justify-content: center; /* Căn giữa nút */
-}
-.sensor-card {
-    background: rgba(255, 255, 255, 0.5);
-    border-radius: 15px;
-    padding: 20px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
-    text-align: center;
-    backdrop-filter: blur(5px);
+/* Tiêu đề chính */
+h2 {
+    font-weight: 600;
+    font-size: 1.75rem;
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.8s ease-in;
+    margin: 30px;
 }
 
-.sensor-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-}
-
-.icon {
+/* Notification Bell */
+.notification-bell {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    background: linear-gradient(45deg, #28a745, #34c759);
+    color: white;
+    border-radius: 50%;
     width: 40px;
     height: 40px;
-    margin-bottom: 10px;
-}
-
-input {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 8px;
-    font-size: 1em;
-    text-align: center;
-    background: #ffffff;
-    color: #333;
-    outline: none;
-    margin-top: 5px;
-}
-
-.sensor-label {
-    font-size: 16px;
-    margin-bottom: 10px;
-    text-align: center;
-    min-height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-@media (max-width: 600px) {
-    .sensor-container {
-        grid-template-columns: 1fr;
-    }
-
-    h2 {
-        font-size: 1.8em;
-    }
-}
-
-#thongbao-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 350px;
-    max-height: 200px;
-    background: #fff;
-    border: 2px solid #f44336;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.2);
-    padding: 15px;
-    overflow-y: auto;
-    z-index: 9999;
-    font-family: Arial, sans-serif;
-}
-
-#thongbao-container::-webkit-scrollbar {
-    display: none;              
-}
-
-#thongbao-container {
-    display: none; 
-    position: fixed;
-    top: 20px;
-    right: 0;
-    width: 25vw; 
-    max-height: 90vh;
-    background: #fff;
-    border-left: 4px solid #f44336;
-    border-radius: 8px 0 0 8px;
-    box-shadow: -4px 0 10px rgba(0,0,0,0.1);
-    padding: 15px;
-    overflow-y: auto;
-    z-index: 9999;
-    font-family: Arial, sans-serif;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-#thongbao-noidung p {
-    margin: 5px 0;
-    padding: 8px;
-    background-color: #ffe6e6;
-    border-left: 4px solid #f44336;
-    border-radius: 5px;
-    font-size: 14px;
-}
-
-#nutchuong {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: #f44336;
-    color: white;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 24px;
     cursor: pointer;
-    z-index: 10000;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    transition: background-color 0.3s;
+    z-index: 1000;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-@keyframes ring {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(-10px); }
-    50% { transform: translateX(10px); }
-    75% { transform: translateX(-10px); }
-    100% { transform: translateX(0); }
+.notification-bell:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
 }
 
-.ring {
-    animation: ring 0.5s ease-in-out infinite; 
+.notification-bell.ring {
+    animation: ring 0.3s ease-in-out 3, pulse 0.8s infinite;
 }
 
-#nutchuong {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: #f44336;
-    color: white;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 24px;
-    cursor: pointer;
-    z-index: 10000;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    transition: background-color 0.3s;
-}
-
-h4 {
-    color: white;
-}
-
-#nutchuong:hover {
-    background-color: #d32f2f;
-}
-
-#thongbao-container { 
-    position: fixed;
-    top: 80px;
-    width: 300px;
-    max-height: 90vh;
-    background: rgba(255, 255, 255, 0.1); /* Nền trắng mờ */
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    border: 2px solid rgba(255, 255, 255, 0.3); /* Viền sáng nhẹ */
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25); /* Bóng lớn hơn */
-    padding: 15px;
-    margin: 15px;
-    overflow-y: auto;
-    z-index: 9999;
-    font-family: Arial, sans-serif;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-    border: 1px solid rgba(255, 255, 255, 0.2);
+.notification-bell .fa-bell {
+    font-size: 20px;
 }
 
 .notification-count {
     position: absolute;
-    top: -5px;
-    right: -5px;
-    background-color: #ff5722;
+    top: -4px;
+    right: -4px;
+    background-color: #d32f2f;
     color: white;
-    font-size: 12px;
-    font-weight: bold;
-    width: 20px;
-    height: 20px;
     border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 2px 6px;
+    font-size: 10px;
+    font-weight: 600;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
 }
 
-#btn-trove {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.25));
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    padding: 10px 20px;
+/* Notification Panel */
+.notification-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    max-width: 320px;
+    height: 100%;
+    background: #fff;
+    box-shadow: -3px 0 10px rgba(0, 0, 0, 0.15);
+    z-index: 999;
+    overflow-y: auto;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: transform 0.8s ease-in-out, opacity 0.8s ease-in-out, visibility 0.8s ease-in-out;
+}
+
+.notification-panel.active {
+    transform: translateX(0);
+}
+
+.notification-panel h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e7e34;
+    margin-bottom: 0;
+    background: linear-gradient(90deg, #e6f4ea, #c3e6cb);
+}
+
+.notification-panel p {
+    margin: 0.4rem 0;
+    padding: 0.6rem;
+    background: #e6f4ea;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: #1e7e34;
+    animation: slideIn 0.4s ease;
+}
+
+.notification-item {
+    animation: slideIn 0.4s ease;
+}
+
+/* Sensor Card */
+.sensor-card {
+    border: 1px solid #c3e6cb;
     border-radius: 10px;
-    font-size: 16px;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-    transition: all 0.3s ease;
-    backdrop-filter: blur(4px);
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    background: #fff;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-#btn-trove:hover {
-    background: linear-gradient(135deg, rgba(97, 255, 92, 0.4), rgba(243, 255, 132, 0.5));
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: 0 0 18px rgba(97, 255, 92, 0.5);
+.sensor-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.sensor-icon {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+}
+
+.sensor-card:hover .sensor-icon {
+    transform: scale(1.1);
+}
+
+.sensor-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e7e34;
+    margin-bottom: 0.5rem;
+}
+
+.form-control {
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: #1e7e34;
+    transition: box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.form-control:disabled {
+    background-color: #f5f6ff;
+    color: #1e7e34;
+}
+
+.form-control.highlight {
+    background-color: #d4edda;
+    box-shadow: 0 0 8px rgba(40, 167, 69, 0.5);
+    animation: pulse 0.8s ease;
+}
+
+/* Nút Trở về */
+.btn-gradient {
+    background: linear-gradient(45deg, #28a745, #34c759);
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 6px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-gradient:hover {
     transform: scale(1.05);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+    color: white;
 }
 
-#btn-trove:active {
-    transform: scale(0.95);
-    box-shadow: 0 0 10px rgba(97, 255, 92, 0.3);
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-15px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(15px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes ring {
+    0% { transform: rotate(0); }
+    25% { transform: rotate(12deg); }
+    50% { transform: rotate(-12deg); }
+    75% { transform: rotate(12deg); }
+    100% { transform: rotate(0); }
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.5); }
+    70% { box-shadow: 0 0 0 8px rgba(40, 167, 69, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    h2 {
+        font-size: 1.25rem;
+    }
+
+    .sensor-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .sensor-label {
+        font-size: 0.9rem;
+    }
+
+    .notification-panel {
+        max-width: 80%;
+    }
+
+    .notification-bell {
+        width: 35px;
+        height: 35px;
+    }
+
+    .notification-bell .fa-bell {
+        font-size: 18px;
+    }
+
+    .notification-count {
+        font-size: 9px;
+        padding: 1px 5px;
+    }
+}
+
+@media (max-width: 576px) {
+    .sensor-icon {
+        width: 30px;
+        height: 30px;
+    }
+
+    .btn-gradient {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+    }
+
+    .sensor-card {
+        margin-bottom: 0.75rem;
+    }
+
+    .form-control {
+        font-size: 0.85rem;
+    }
+}

@@ -23,7 +23,7 @@ try {
             $_SESSION['matkhau'] = $matkhau;
             $_SESSION['hoten'] = $user['hoten'];
             $_SESSION['email'] = $user['email'];
-            header("Location: trangchunguoidung.php");
+            header("Location: trangchu.php");
             exit();
         } else {
             echo "Sai mật khẩu. <a href='login.html'>Thử lại</a>";
