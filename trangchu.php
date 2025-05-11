@@ -127,10 +127,10 @@ if (isset($_SESSION['tendn'])) {
       <a href="dieukhien.php" class="block py-2 md:py-0 hover:text-green-600 flex items-center gap-x-1 transition" <?php echo !isset($_SESSION['tendn']) ? 'style="pointer-events: none;"' : ''; ?>>
         <i data-lucide="sliders" class="w-4 h-4"></i>Điều khiển & Thao tác
       </a>
-      <a href="#" class="block py-2 md:py-0 hover:text-green-600 flex items-center gap-x-1 transition" <?php echo !isset($_SESSION['tendn']) ? 'style="pointer-events: none;"' : ''; ?>>
+      <a href="quanlytb.php" class="block py-2 md:py-0 hover:text-green-600 flex items-center gap-x-1 transition" <?php echo !isset($_SESSION['tendn']) ? 'style="pointer-events: none;"' : ''; ?>>
         <i data-lucide="settings" class="w-4 h-4"></i>Quản lý
       </a>
-      <a href="#" class="block py-2 md:py-0 hover:text-green-600 flex items-center gap-x-1 transition" <?php echo !isset($_SESSION['tendn']) ? 'style="pointer-events: none;"' : ''; ?>>
+      <a href="thongke.php" class="block py-2 md:py-0 hover:text-green-600 flex items-center gap-x-1 transition" <?php echo !isset($_SESSION['tendn']) ? 'style="pointer-events: none;"' : ''; ?>>
         <i data-lucide="bar-chart-2" class="w-4 h-4"></i>Thống kê
       </a>
     </nav>

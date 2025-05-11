@@ -50,7 +50,7 @@ try {
             <?php foreach ($results as $row) { ?>
                 <div class="col">
                     <div class="sensor-card card h-100 text-center">
-                        <img src="<?= $row['anh'] ?>" class="card-img-top sensor-icon mx-auto mt-2" alt="sensor icon">
+                        <img src="picture/<?= $row['anh'] ?>" class="card-img-top sensor-icon mx-auto mt-2" alt="sensor icon">
                         <div class="card-body p-2">
                             <h5 class="card-title sensor-label"><?= $row['tencb'] ?></h5>
                             <input type="text" name="<?= $row['idcb'] ?>" disabled placeholder="Giá trị" id="<?= $row['id'] ?>" class="form-control text-center">

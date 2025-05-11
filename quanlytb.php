@@ -1,76 +1,174 @@
 <?php
-// Kết nối CSDL
-include 'config.php';
-$pdo = connectDatabase();
+/**
+ * IoT System Management Dashboard - Redesigned UI with Icons & Styled Buttons
+ * Version 2.1
+ */
+
+require_once "config.php";
+
 try {
-    // Truy vấn danh sách cảm biến
-    $sql_cambien = "SELECT idcb AS ID, tencb AS Ten, trangthai AS TrangThai, thoigian AS ThoiGian FROM cambien;";
-    $stmt_cb = $pdo->prepare($sql_cambien);
-    $stmt_cb->execute();
-    $data_cb = $stmt_cb->fetchAll(PDO::FETCH_ASSOC);
-
-    // Truy vấn danh sách thiết bị điều khiển
-    $sql_dieukhien = "SELECT iddk AS ID, tendk AS Ten, trangthai AS TrangThai, thoigian AS ThoiGian FROM dieukhien;";
-    $stmt_dk = $pdo->prepare($sql_dieukhien);
-    $stmt_dk->execute();
-    $data_dk = $stmt_dk->fetchAll(PDO::FETCH_ASSOC);
-
-    // Truy vấn danh sách vị trí lắp đặt
-    $sql_vitrilapdat = "SELECT idvt AS ID, idtb AS ID_ThietBi, loaitb AS LoaiThietBi, khuvuc AS KhuVuc, soluong AS SoLuong, thoigian AS ThoiGian FROM vitrilapdat;";
-    $stmt_vt = $pdo->prepare($sql_vitrilapdat);
-    $stmt_vt->execute();
-    $data_vt = $stmt_vt->fetchAll(PDO::FETCH_ASSOC);
-
-    // Hiển thị bảng cảm biến
-    echo "<h2>Danh Sách Cảm Biến</h2>";
-    echo "<table border='1'>";
-    echo "<tr><th>ID</th><th>Tên Cảm Biến</th><th>Trạng Thái</th><th>Thời Gian</th></tr>";
-
-    foreach ($data_cb as $row) {
-        $trangthai = ($row['TrangThai'] == 1) ? "<span style='color: green;'>ON</span>" : "<span style='color: red;'>OFF</span>";
-        echo "<tr>
-                <td>{$row['ID']}</td>
-                <td>{$row['Ten']}</td>
-                <td>{$trangthai}</td>
-                <td>{$row['ThoiGian']}</td>
-              </tr>";
-    }
-    echo "</table>";
-
-    // Hiển thị bảng thiết bị điều khiển
-    echo "<h2>Danh Sách Thiết Bị Điều Khiển</h2>";
-    echo "<table border='1'>";
-    echo "<tr><th>ID</th><th>Tên Thiết Bị</th><th>Trạng Thái</th><th>Thời Gian</th></tr>";
-
-    foreach ($data_dk as $row) {
-        $trangthai = ($row['TrangThai'] == 1) ? "<span style='color: green;'>ON</span>" : "<span style='color: red;'>OFF</span>";
-        echo "<tr>
-                <td>{$row['ID']}</td>
-                <td>{$row['Ten']}</td>
-                <td>{$trangthai}</td>
-                <td>{$row['ThoiGian']}</td>
-              </tr>";
-    }
-    echo "</table>";
-
-    // Hiển thị bảng vị trí lắp đặt
-    echo "<h2>Danh Sách Vị Trí Lắp Đặt</h2>";
-    echo "<table border='1'>";
-    echo "<tr><th>ID</th><th>ID Thiết Bị</th><th>Loại Thiết Bị</th><th>Khu Vực</th><th>Số Lượng</th><th>Thời Gian</th></tr>";
-
-    foreach ($data_vt as $row) {
-        echo "<tr>
-                <td>{$row['ID']}</td>
-                <td>{$row['ID_ThietBi']}</td>
-                <td>{$row['LoaiThietBi']}</td>
-                <td>{$row['KhuVuc']}</td>
-                <td>{$row['SoLuong']}</td>
-                <td>{$row['ThoiGian']}</td>
-              </tr>";
-    }
-    echo "</table>";
-
-} catch (PDOException $e) {
-    echo "Lỗi: " . $e->getMessage();
+    $conn = connectDatabase();
+} catch (Exception $e) {
+    die("Connection Error: " . $e->getMessage());
 }
 ?>
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>document.addEventListener('DOMContentLoaded', () => { lucide.createIcons(); });</script>
+</head>
+<body class="bg-gray-50 min-h-screen text-gray-800">
+    <div class="container mx-auto px-4 py-4">
+        <header class="mb-10 text-center">
+            <h1 class="text-4xl font-bold">Dashboard Quản Lý IoT</h1>
+            <p class="text-gray-500 mt-2">Giám sát thiết bị, cảm biến và khu vực dễ dàng</p>
+        </header>
+        <div class="mb-6">
+            <a href="trangchu.php" class="inline-flex items-center text-sm bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded">
+                <i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i> Quay về Trang chính
+            </a>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Cảm Biến -->
+            <section class="bg-white rounded-xl shadow p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold flex items-center"><i data-lucide="activity" class="w-5 h-5 mr-2"></i> Cảm Biến</h2>
+                    <a href="add_cambien.php" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center text-sm font-medium">
+                        <i data-lucide="plus-circle" class="w-4 h-4 mr-2"></i> Thêm mới
+                    </a>
+                </div>
+                <div class="overflow-x-auto max-h-[300px]">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
+                            <tr>
+                                <th class="py-2 px-4 text-left">ID</th>
+                                <th class="py-2 px-4 text-left">Tên</th>
+                                <th class="py-2 px-4 text-left">Trạng thái</th>
+                                <th class="py-2 px-4 text-left">Thời gian</th>
+                                <th class="py-2 px-4 text-left">Khu vực</th>
+                                <th class="py-2 px-4 text-left">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $stmt = $conn->query("SELECT cb.idcb, cb.tencb, cb.trangthai, cb.thoigian, kv.tenkv FROM cambien cb LEFT JOIN khuvuc kv ON cb.idvt = kv.idkv");
+                            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                echo "<tr class='border-b hover:bg-gray-50'>
+                                        <td class='py-2 px-4'>{$row['idcb']}</td>
+                                        <td class='py-2 px-4'>{$row['tencb']}</td>
+                                        <td class='py-2 px-4'>{$row['trangthai']}</td>
+                                        <td class='py-2 px-4'>{$row['thoigian']}</td>
+                                        <td class='py-2 px-4'>{$row['tenkv']}</td>
+                                        <td class='py-2 px-4 space-x-2'>
+                                            <a href='update_cambien.php?id={$row['idcb']}' class='inline-flex items-center text-green-600 hover:text-green-800'>
+                                                <i data-lucide='edit-3' class='w-4 h-4 mr-1'></i> Cập nhật
+                                            </a>
+                                            <a href='delete_cambien.php?id={$row['idcb']}' class='inline-flex items-center text-red-600 hover:text-red-800'>
+                                                <i data-lucide='trash-2' class='w-4 h-4 mr-1'></i> Xóa
+                                            </a>
+                                        </td>
+                                    </tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Thiết Bị -->
+            <section class="bg-white rounded-xl shadow p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold flex items-center"><i data-lucide="cpu" class="w-5 h-5 mr-2"></i> Thiết Bị</h2>
+                    <a href="add_thietbi.php" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center text-sm font-medium">
+                        <i data-lucide="plus-circle" class="w-4 h-4 mr-2"></i> Thêm mới
+                    </a>
+                </div>
+                <div class="overflow-x-auto max-h-[300px]">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
+                            <tr>
+                                <th class="py-2 px-4 text-left">ID</th>
+                                <th class="py-2 px-4 text-left">Tên</th>
+                                <th class="py-2 px-4 text-left">Trạng thái</th>
+                                <th class="py-2 px-4 text-left">Thời gian</th>
+                                <th class="py-2 px-4 text-left">Khu vực</th>
+                                <th class="py-2 px-4 text-left">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $stmt = $conn->query("SELECT tb.idtb, tb.tentb, tb.trangthai, tb.thoigian, kv.tenkv FROM thietbi tb LEFT JOIN khuvuc kv ON tb.idvt = kv.idkv");
+                            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                echo "<tr class='border-b hover:bg-gray-50'>
+                                        <td class='py-2 px-4'>{$row['idtb']}</td>
+                                        <td class='py-2 px-4'>{$row['tentb']}</td>
+                                        <td class='py-2 px-4'>{$row['trangthai']}</td>
+                                        <td class='py-2 px-4'>{$row['thoigian']}</td>
+                                        <td class='py-2 px-4'>{$row['tenkv']}</td>
+                                        <td class='py-2 px-4 space-x-2'>
+                                            <a href='update_thietbi.php?id={$row['idtb']}' class='inline-flex items-center text-green-600 hover:text-green-800'>
+                                                <i data-lucide='edit-3' class='w-4 h-4 mr-1'></i> Cập nhật
+                                            </a>
+                                            <a href='delete_thietbi.php?id={$row['idtb']}' class='inline-flex items-center text-red-600 hover:text-red-800'>
+                                                <i data-lucide='trash-2' class='w-4 h-4 mr-1'></i> Xóa
+                                            </a>
+                                        </td>
+                                    </tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Khu Vực -->
+            <section class="bg-white rounded-xl shadow p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold flex items-center"><i data-lucide="map-pin" class="w-5 h-5 mr-2"></i> Khu Vực</h2>
+                    <a href="add_khuvuc.php" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center text-sm font-medium">
+                        <i data-lucide="plus-circle" class="w-4 h-4 mr-2"></i> Thêm mới
+                    </a>
+                </div>
+                <div class="overflow-x-auto max-h-[300px]">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
+                            <tr>
+                                <th class="py-2 px-4 text-left">ID</th>
+                                <th class="py-2 px-4 text-left">Tên khu</th>
+                                <th class="py-2 px-4 text-left">Mô tả</th>
+                                <th class="py-2 px-4 text-left">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $stmt = $conn->query("SELECT idkv, tenkv, mota FROM khuvuc");
+                            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                echo "<tr class='border-b hover:bg-gray-50'>
+                                        <td class='py-2 px-4'>{$row['idkv']}</td>
+                                        <td class='py-2 px-4'>{$row['tenkv']}</td>
+                                        <td class='py-2 px-4'>{$row['mota']}</td>
+                                        <td class='py-2 px-4 space-x-2'>
+                                            <a href='update_khuvuc.php?id={$row['idkv']}' class='inline-flex items-center text-green-600 hover:text-green-800'>
+                                                <i data-lucide='edit-3' class='w-4 h-4 mr-1'></i> Cập nhật
+                                            </a>
+                                            <a href='delete_khuvuc.php?id={$row['idkv']}' class='inline-flex items-center text-red-600 hover:text-red-800'>
+                                                <i data-lucide='trash-2' class='w-4 h-4 mr-1'></i> Xóa
+                                            </a>
+                                        </td>
+                                    </tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</body>
+</html>
