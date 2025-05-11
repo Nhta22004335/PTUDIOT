@@ -110,6 +110,9 @@ if (isset($_SESSION['tendn'])) {
       .relative > button > span { display: none; }
       .relative > button > img { width: 2rem; height: 2rem; }
     }
+    .user-menu {
+      display: block;
+    }
   </style>
 </head>
 <body class="bg-black text-white font-sans">
@@ -130,11 +133,8 @@ if (isset($_SESSION['tendn'])) {
       <a href="quanlytb.php" class="block py-2 md:py-0 hover:text-green-600 flex items-center gap-x-1 transition" <?php echo !isset($_SESSION['tendn']) ? 'style="pointer-events: none;"' : ''; ?>>
         <i data-lucide="settings" class="w-4 h-4"></i>Quản lý
       </a>
-      <a href="thongkesensor.php" class="block py-2 md:py-0 hover:text-green-600 flex items-center gap-x-1 transition" <?php echo !isset($_SESSION['tendn']) ? 'style="pointer-events: none;"' : ''; ?>>
-        <i data-lucide="bar-chart-2" class="w-4 h-4"></i>Thống kê Sensor
-      </a>
-      <a href="thongketb.php" class="block py-2 md:py-0 hover:text-green-600 flex items-center gap-x-1 transition" <?php echo !isset($_SESSION['tendn']) ? 'style="pointer-events: none;"' : ''; ?>>
-        <i data-lucide="bar-chart-2" class="w-4 h-4"></i>Thống kê thiết bị
+      <a href="nhatkysensor.php" class="block py-2 md:py-0 hover:text-green-600 flex items-center gap-x-1 transition" <?php echo !isset($_SESSION['tendn']) ? 'style="pointer-events: none;"' : ''; ?>>
+        <i data-lucide="book-open-check" class="w-4 h-4"></i>Nhật ký Sensor
       </a>
     </nav>
     <div class="relative" id="user-menu" x-data="{ openUser: false }" @click.outside="openUser = false">
@@ -246,8 +246,29 @@ if (isset($_SESSION['tendn'])) {
             userMenu.style.display = 'block';
           }
         });
-      } 
+
+        // Reset menu states on window resize
+        window.addEventListener('resize', function () {
+          // console.log('Window resized, width:', window.innerWidth);
+          if (window.innerWidth > 768) {
+            navMenu.classList.remove('active');
+            navMenu.style.display = 'flex';
+            userMenu.style.display = 'block';
+            // console.log('Desktop mode: navMenu flex, userMenu block');
+          } else {
+            userMenu.style.display = navMenu.classList.contains('active') ? 'none' : 'flex';
+            // console.log('Mobile mode: navMenu', navMenu.style.display, 'userMenu', userMenu.style.display);
+          }
+        });
+
+        // Trigger resize event on load to ensure correct initial state
+        console.log('Page loaded, triggering resize');
+        window.dispatchEvent(new Event('resize'));
+
+      }
+
     });
+
     lucide.createIcons();
   </script>
 </body>
