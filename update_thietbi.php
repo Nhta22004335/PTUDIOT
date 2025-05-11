@@ -33,9 +33,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $tentb = $_POST['tentb'] ?? '';
     $trangthai = $_POST['trangthai'] ?? '';
     $idvt = $_POST['idvt'] ?? '';
-
-    $stmt = $conn->prepare("UPDATE thietbi SET tentb = ?, trangthai = ?, idvt = ? WHERE idtb = ?");
-    $stmt->execute([$tentb, $trangthai, $idvt, $id]);
+    $icon = $_POST['icon'] ?? '';
+    $stmt = $conn->prepare("UPDATE thietbi SET icon = ?, tentb = ?, trangthai = ?, idvt = ? WHERE idtb = ?");
+    $stmt->execute([$icon, $tentb, $trangthai, $idvt, $id]);
     header("Location: quanlytb.php");
     exit;
 }
@@ -59,6 +59,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div>
                 <label class="block mb-1 font-medium">Trạng Thái</label>
                 <input type="text" name="trangthai" value="<?= htmlspecialchars($thietbi['trangthai']) ?>" required class="w-full px-3 py-2 border rounded">
+            </div>
+            <div>
+                <label class="block mb-1 font-medium">Chọn Icon (Font Awesome)</label>
+                <select name="icon" class="w-full px-3 py-2 border rounded" onchange="updateIconPreview(this.value)">
+                    <?php
+                    // Một danh sách mẫu các icon phổ biến (bạn có thể mở rộng nếu cần)
+                    $icons = [
+                        "fas fa-cogs", "fas fa-snowflake", "fas fa-fan", "fas fa-sun",
+                        "fas fa-lightbulb", "fas fa-bullhorn", "fas fa-cog", "fas fa-fire", "fas fa-water"
+                    ];
+                    foreach ($icons as $icon) {
+                        $selected = ($thietbi['icon'] == $icon) ? 'selected' : '';
+                        echo "<option value=\"$icon\" $selected>$icon</option>";
+                    }
+                    ?>
+                </select>
+                <div class="mt-2 text-xl"><i id="iconPreview" class="<?= $thietbi['icon'] ?>"></i> <span class="text-sm">Xem trước</span></div>
             </div>
             <div>
                 <label class="block mb-1 font-medium">Khu Vực</label>

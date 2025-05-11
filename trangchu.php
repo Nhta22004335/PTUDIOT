@@ -130,8 +130,11 @@ if (isset($_SESSION['tendn'])) {
       <a href="quanlytb.php" class="block py-2 md:py-0 hover:text-green-600 flex items-center gap-x-1 transition" <?php echo !isset($_SESSION['tendn']) ? 'style="pointer-events: none;"' : ''; ?>>
         <i data-lucide="settings" class="w-4 h-4"></i>Quản lý
       </a>
-      <a href="thongke.php" class="block py-2 md:py-0 hover:text-green-600 flex items-center gap-x-1 transition" <?php echo !isset($_SESSION['tendn']) ? 'style="pointer-events: none;"' : ''; ?>>
-        <i data-lucide="bar-chart-2" class="w-4 h-4"></i>Thống kê
+      <a href="thongkesensor.php" class="block py-2 md:py-0 hover:text-green-600 flex items-center gap-x-1 transition" <?php echo !isset($_SESSION['tendn']) ? 'style="pointer-events: none;"' : ''; ?>>
+        <i data-lucide="bar-chart-2" class="w-4 h-4"></i>Thống kê Sensor
+      </a>
+      <a href="thongketb.php" class="block py-2 md:py-0 hover:text-green-600 flex items-center gap-x-1 transition" <?php echo !isset($_SESSION['tendn']) ? 'style="pointer-events: none;"' : ''; ?>>
+        <i data-lucide="bar-chart-2" class="w-4 h-4"></i>Thống kê thiết bị
       </a>
     </nav>
     <div class="relative" id="user-menu" x-data="{ openUser: false }" @click.outside="openUser = false">
