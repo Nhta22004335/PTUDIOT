@@ -32,9 +32,10 @@ PubSubClient client(espClient);
 DHT dht(DHTPIN, DHTTYPE);
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-float nd[7], da[7], khi[7], as[7], dad[7];
-float tnd = 0, tda = 0, tkhi = 0, tas = 0, tdad = 0;
+float nd[7], da[7], khi[7], as[7], dad[7], sa[7];
+float tnd = 0, tda = 0, tkhi = 0, tas = 0, tdad = 0, tsa = 0;
 int i = 0;
+bool bufferFull = false; // Flag to indicate buffer is full
 SemaphoreHandle_t xDataMutex;
 
 void WIFIConnect() {
@@ -51,15 +52,19 @@ void WIFIConnect() {
 
 void MQTT_Reconnect() {
   while (!client.connected()) {
-    Serial.println("Đang kết nối MQTT...");
+    Serial.print("Đang kết nối MQTT đến ");
+    Serial.print(MQTT_Server);
+    Serial.println("...");
     if (client.connect(MQTT_ID)) {
       Serial.println("Kết nối thành công!");
       client.subscribe(MQTT_Topic_Nhan);
+      Serial.print("Đã subscribe vào topic: ");
+      Serial.println(MQTT_Topic_Nhan);
     } else {
-      Serial.print("failed, rc=");
+      Serial.print("Kết nối thất bại, rc=");
       Serial.print(client.state());
-      Serial.println(" try again in 5 seconds");
-      vTaskDelay(5000 / portTICK_PERIOD_MS);
+      Serial.println(" - Thử lại sau 1 giây");
+      vTaskDelay(1000 / portTICK_PERIOD_MS); // Reduced delay
     }
   }
 }
@@ -108,18 +113,22 @@ void TaskSensorRead(void *pvParameters) {
         khi[i] = khigas;
         as[i] = anhsang;
         dad[i] = doamdat;
+        sa[i] = sieuam;
         i++;
+        Serial.print("Sample stored, i = "); Serial.println(i);
       }
 
       if (i >= 7) {
-        i = 6;
-        tnd = tda = tkhi = tas = tdad = 0;
+        bufferFull = true; 
+        i = 6; 
+        tnd = tda = tkhi = tas = tdad = tsa = 0;
         for (int j = 0; j < 7; j++) {
           tnd += nd[j];
           tda += da[j];
           tkhi += khi[j];
           tas += as[j];
           tdad += dad[j];
+          tsa += sa[j];
         }
         for (int j = 0; j < 6; j++) {
           nd[j] = nd[j + 1];
@@ -127,15 +136,14 @@ void TaskSensorRead(void *pvParameters) {
           khi[j] = khi[j + 1];
           as[j] = as[j + 1];
           dad[j] = dad[j + 1];
+          sa[j] = sa[j + 1];
         }
       }
       xSemaphoreGive(xDataMutex);
     } else {
       Serial.println("Lỗi đọc từ cảm biến DHT22!");
     }
-
-    Serial.println(hongngoai);
-    vTaskDelay(5000 / portTICK_PERIOD_MS);
+    vTaskDelay(2000 / portTICK_PERIOD_MS); 
   }
 }
 
@@ -148,20 +156,38 @@ void TaskMQTTPublish(void *pvParameters) {
     client.loop();
 
     xSemaphoreTake(xDataMutex, portMAX_DELAY);
-    if (i >= 7) {
+    if (bufferFull) {
+      float avg_nd = tnd / 7;
+      float avg_da = tda / 7;
+      float avg_khi = tkhi / 7;
+      float avg_as = tas / 7;
+      float avg_dad = tdad / 7;
+      float avg_sa = tsa / 7;
+
       String jsonData = "{"
-        "\"humidity\":" + String(tda/7, 2) +
-        ", \"temperature\":" + String(tnd/7, 2) +
-        ", \"anhsang\":" + String(tas/7, 2) +
-        ", \"nongdokhi\":" + String(tkhi/7, 2) +
-        ", \"doamdat\":" + String(tdad/7, 2) +
-        ", \"sieuam\":" + String(0.0, 2) +
+        "\"humidity\":" + String(avg_da, 2) +
+        ", \"temperature\":" + String(avg_nd, 2) +
+        ", \"anhsang\":" + String(avg_as, 2) +
+        ", \"nongdokhi\":" + String(avg_khi, 2) +
+        ", \"doamdat\":" + String(avg_dad, 2) +
+        ", \"sieuam\":" + String(avg_sa, 2) +
         "}";
-      client.publish(MQTT_Topic_Gui, jsonData.c_str());
+
+      Serial.println("Chuỗi JSON sắp gửi:");
+      Serial.println(jsonData);
+
+      bool success = client.publish(MQTT_Topic_Gui, jsonData.c_str());
+      if (success) {
+        Serial.println("MQTT publish thành công!");
+      } else {
+        Serial.print("MQTT publish thất bại! rc=");
+        Serial.println(client.state());
+      }
+      bufferFull = false; // Reset flag after publishing
     }
     xSemaphoreGive(xDataMutex);
 
-    vTaskDelay(500 / portTICK_PERIOD_MS);
+    vTaskDelay(100 / portTICK_PERIOD_MS); // Minimal delay to check for new data
   }
 }
 
@@ -180,6 +206,7 @@ void setup() {
   client.setServer(MQTT_Server, Port);
   client.setCallback(callback);
   dht.begin();
+  vTaskDelay(2000 / portTICK_PERIOD_MS); // Wait for DHT22 to stabilize
   lcd.init();
   lcd.backlight();
 
@@ -207,5 +234,5 @@ void setup() {
 }
 
 void loop() {
-  // Empty loop as tasks handle everythings
+  // Empty loop as tasks handle everything
 }

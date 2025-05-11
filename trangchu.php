@@ -16,7 +16,6 @@ if (isset($_SESSION['tendn'])) {
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link rel="stylesheet" href="style.css">
   <style>
     .swiper { height: 100vh; }
     .swiper-slide { background-size: cover; background-position: center; }
@@ -123,13 +122,16 @@ if (isset($_SESSION['tendn'])) {
     </button>
     <nav id="nav-menu" class="hidden md:flex md:items-center md:space-x-6 absolute md:static top-16 left-0 w-full md:w-auto bg-green bg-opacity-90 md:bg-transparent p-4 md:p-0 transition-all duration-300">
       <a href="theodoi.php" class="block py-2 md:py-0 hover:text-green-600 flex items-center gap-x-1 transition" <?php echo !isset($_SESSION['tendn']) ? 'style="pointer-events: none;"' : ''; ?>>
-        <i data-lucide="shopping-bag" class="w-4 h-4"></i>Theo dõi
+        <i data-lucide="activity" class="w-4 h-4"></i>Theo dõi
       </a>
       <a href="dieukhien.php" class="block py-2 md:py-0 hover:text-green-600 flex items-center gap-x-1 transition" <?php echo !isset($_SESSION['tendn']) ? 'style="pointer-events: none;"' : ''; ?>>
-        <i data-lucide="file-text" class="w-4 h-4"></i>Điều khiển & Thao tác Telegram
+        <i data-lucide="sliders" class="w-4 h-4"></i>Điều khiển & Thao tác
       </a>
       <a href="#" class="block py-2 md:py-0 hover:text-green-600 flex items-center gap-x-1 transition" <?php echo !isset($_SESSION['tendn']) ? 'style="pointer-events: none;"' : ''; ?>>
-        <i data-lucide="grid" class="w-4 h-4"></i>Thống kê
+        <i data-lucide="settings" class="w-4 h-4"></i>Quản lý
+      </a>
+      <a href="#" class="block py-2 md:py-0 hover:text-green-600 flex items-center gap-x-1 transition" <?php echo !isset($_SESSION['tendn']) ? 'style="pointer-events: none;"' : ''; ?>>
+        <i data-lucide="bar-chart-2" class="w-4 h-4"></i>Thống kê
       </a>
     </nav>
     <div class="relative" id="user-menu" x-data="{ openUser: false }" @click.outside="openUser = false">
@@ -234,7 +236,6 @@ if (isset($_SESSION['tendn'])) {
       const userMenu = document.getElementById('user-menu');
       if (menuToggle && navMenu && userMenu) {
         menuToggle.addEventListener('click', function () {
-          console.log('Hamburger clicked');
           navMenu.classList.toggle('active');
           if (navMenu.classList.contains('active')) {
             userMenu.style.display = 'none';
@@ -242,9 +243,7 @@ if (isset($_SESSION['tendn'])) {
             userMenu.style.display = 'block';
           }
         });
-      } else {
-        console.error('Menu toggle, nav menu, or user menu not found');
-      }
+      } 
     });
     lucide.createIcons();
   </script>

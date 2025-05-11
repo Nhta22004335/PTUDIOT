@@ -26,7 +26,6 @@ include "config.php";
             display: flex;
             justify-content: center;
             align-items: center;
-
             background-image: url('picture/bg.jpg');
             background-size: cover;         /* Phủ toàn bộ màn hình */
             background-position: center;    /* Căn giữa */
@@ -45,17 +44,20 @@ include "config.php";
             background: #fff;
             border-radius: 10px;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-            padding: 1.5rem;
+            padding: 1.5rem;            
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(10px);
         }
         .telegram-container h2, .control-container h2 {
             text-align: center;
             font-size: 1.5rem;
             font-weight: 600;
             margin-bottom: 1rem;
-            color: #1e7e34;
+            color:rgb(255, 255, 255);
         }
         #botReply {
-            max-height: 300px;
+            height: 450px;
             overflow-y: auto;
             padding: 0.5rem;
             border: 1px solid #c3e6cb;
@@ -81,8 +83,9 @@ include "config.php";
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 15px;
         }
+
         .card {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 1);
             border-radius: 12px;
             box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
             padding: 15px 10px;
@@ -208,7 +211,6 @@ include "config.php";
             <div id="botReply"></div>
             <p id="sendStatus" class="text-center"></p>
         </div>
-
         <!-- Device Controls -->
         <div class="control-container">
             <h2>Điều Khiển Thiết Bị</h2>
@@ -397,17 +399,57 @@ include "config.php";
                                 const notifications = [];
                                 const deviceStateUpdates = {};
 
-                                const turnOnKeywords = ["Bật", "Mở", "Kích hoạt", "Khởi động", "Chạy"];
-                                const turnOffKeywords = ["Tắt", "Ngừng", "Dừng", "Hủy", "Đóng", "Ngưng"];
-                                const lightKeywords = ["đèn", "đèn cảnh báo", "đèn chiếu sáng", "ánh sáng"];
-                                const motorKeywords = ["motor", "động cơ", "máy", "bơm nước"];
-                                const mistKeywords = ["phun sương", "sương mù", "hệ thống phun", "máy phun sương"];
-                                const fanKeywords = ["quạt thông gió", "quạt", "hệ thống thông gió", "thông gió"];
-                                const alarmKeywords = ["còi báo động", "chuông báo động", "báo động", "còi"];
-                                const curtainKeywords = ["hệ thống màng che", "màng che", "rèm che"];
+                                // Expanded keyword arrays with refined lightKeywords to avoid overlap
+                                const turnOnKeywords = [
+                                    "Bật", "Mở", "Kích hoạt", "Khởi động", "Chạy", 
+                                    "Bật lên", "Mở lên", "Tăng", "Hoạt động", "Vận hành", 
+                                    "Bật thiết bị", "Mở thiết bị", "Khởi chạy", "Kích hoạt hệ thống"
+                                ];
+                                const turnOffKeywords = [
+                                    "Tắt", "Ngừng", "Dừng", "Hủy", "Đóng", "Ngưng", 
+                                    "Tắt đi", "Ngắt", "Hủy bỏ", "Khóa", "Tạm dừng", 
+                                    "Tắt thiết bị", "Đóng hệ thống", "Ngưng hoạt động"
+                                ];
+                                const lightKeywords = [
+                                    "đèn chiếu sáng", "ánh sáng", "chiếu sáng", 
+                                    "đèn sáng", "hệ thống đèn chiếu sáng", "đèn điện chiếu sáng", 
+                                    "đèn led chiếu sáng", "ánh đèn chiếu sáng", "đèn ngoài chiếu sáng", 
+                                    "đèn trong chiếu sáng", "hệ thống chiếu sáng"
+                                ];
+                                const motorKeywords = [
+                                    "motor", "động cơ", "máy", "bơm nước", "máy bơm", 
+                                    "động cơ nước", "hệ thống bơm", "máy nước", "motor nước", 
+                                    "bơm", "động cơ điện"
+                                ];
+                                const mistKeywords = [
+                                    "phun sương", "sương mù", "hệ thống phun", "máy phun sương", 
+                                    "phun nước", "tạo sương", "hệ thống sương", "máy sương", 
+                                    "phun hơi nước", "sương"
+                                ];
+                                const fanKeywords = [
+                                    "quạt thông gió", "quạt", "hệ thống thông gió", "thông gió", 
+                                    "quạt gió", "máy quạt", "quạt điện", "hệ thống quạt", 
+                                    "quạt làm mát", "quạt không khí"
+                                ];
+                                const alarmKeywords = [
+                                    "còi báo động", "chuông báo động", "báo động", "còi", 
+                                    "chuông cảnh báo", "hệ thống báo động", "còi kêu", 
+                                    "báo hiệu", "cảnh báo âm thanh", "chuông kêu"
+                                ];
+                                const curtainKeywords = [
+                                    "hệ thống màng che", "màng che", "rèm che", "màn che", 
+                                    "hệ thống rèm", "che phủ", "màng phủ", "rèm", 
+                                    "hệ thống che", "màn phủ"
+                                ];
+                                const ledWarningKeywords = [
+                                    "đèn cảnh báo", "đèn led cảnh báo", "led cảnh báo", 
+                                    "đèn báo động", "đèn tín hiệu", "đèn báo", "đèn led báo", 
+                                    "hệ thống cảnh báo ánh sáng", "đèn hiệu", "đèn báo nguy hiểm"
+                                ];
 
                                 const includesAny = (text, keywords) => keywords.some(keyword => text.toLowerCase().includes(keyword.toLowerCase()));
 
+                                // Light system (đèn chiếu sáng)
                                 if (includesAny(messageText, turnOnKeywords) && includesAny(messageText, lightKeywords)) {
                                     notifications.push("Có yêu cầu bật đèn chiếu sáng!");
                                     deviceStateUpdates["htdenchieusang"] = 1;
@@ -416,14 +458,18 @@ include "config.php";
                                     notifications.push("Có yêu cầu tắt đèn chiếu sáng!");
                                     deviceStateUpdates["htdenchieusang"] = 0;
                                 }
+
+                                // Motor system (motor bơm nước)
                                 if (includesAny(messageText, turnOnKeywords) && includesAny(messageText, motorKeywords)) {
-                                    notifications.push("Có yêu cầu bật motor!");
+                                    notifications.push("Có yêu cầu bật motor bơm nước!");
                                     deviceStateUpdates["motorbechuanuoc"] = 1;
                                 }
                                 if (includesAny(messageText, turnOffKeywords) && includesAny(messageText, motorKeywords)) {
-                                    notifications.push("Có yêu cầu ngưng motor!");
+                                    notifications.push("Có yêu cầu ngưng motor bơm nước!");
                                     deviceStateUpdates["motorbechuanuoc"] = 0;
                                 }
+
+                                // Mist system (hệ thống phun sương)
                                 if (includesAny(messageText, turnOnKeywords) && includesAny(messageText, mistKeywords)) {
                                     notifications.push("Có yêu cầu kích hoạt hệ thống phun sương!");
                                     deviceStateUpdates["htphunsuong"] = 1;
@@ -432,6 +478,8 @@ include "config.php";
                                     notifications.push("Có yêu cầu tắt hệ thống phun sương!");
                                     deviceStateUpdates["htphunsuong"] = 0;
                                 }
+
+                                // Fan system (quạt thông gió)
                                 if (includesAny(messageText, turnOnKeywords) && includesAny(messageText, fanKeywords)) {
                                     notifications.push("Có yêu cầu mở quạt thông gió!");
                                     deviceStateUpdates["quatthongio"] = 1;
@@ -440,6 +488,8 @@ include "config.php";
                                     notifications.push("Có yêu cầu tắt quạt thông gió!");
                                     deviceStateUpdates["quatthongio"] = 0;
                                 }
+
+                                // Alarm system (còi báo động)
                                 if (includesAny(messageText, turnOnKeywords) && includesAny(messageText, alarmKeywords)) {
                                     notifications.push("Có yêu cầu bật còi báo động!");
                                     deviceStateUpdates["coibao"] = 1;
@@ -448,6 +498,8 @@ include "config.php";
                                     notifications.push("Có yêu cầu tắt còi báo động!");
                                     deviceStateUpdates["coibao"] = 0;
                                 }
+
+                                // Curtain system (hệ thống màng che)
                                 if (includesAny(messageText, turnOnKeywords) && includesAny(messageText, curtainKeywords)) {
                                     notifications.push("Có yêu cầu kích hoạt hệ thống màng che!");
                                     deviceStateUpdates["htmangche"] = 1;
@@ -455,6 +507,16 @@ include "config.php";
                                 if (includesAny(messageText, turnOffKeywords) && includesAny(messageText, curtainKeywords)) {
                                     notifications.push("Có yêu cầu tắt hệ thống màng che!");
                                     deviceStateUpdates["htmangche"] = 0;
+                                }
+
+                                // LED warning system (đèn LED cảnh báo)
+                                if (includesAny(messageText, turnOnKeywords) && includesAny(messageText, ledWarningKeywords)) {
+                                    notifications.push("Có yêu cầu bật đèn LED cảnh báo!");
+                                    deviceStateUpdates["htledcanhbao"] = 1;
+                                }
+                                if (includesAny(messageText, turnOffKeywords) && includesAny(messageText, ledWarningKeywords)) {
+                                    notifications.push("Có yêu cầu tắt đèn LED cảnh báo!");
+                                    deviceStateUpdates["htledcanhbao"] = 0;
                                 }
 
                                 if (notifications.length > 0) {

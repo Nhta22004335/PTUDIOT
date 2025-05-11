@@ -264,7 +264,7 @@ try {
                 }
             });
         }
-        // setInterval(updateSensorValues, 120000);
+        setInterval(updateSensorValues, 120000);
     </script>
 </body>
 </html>
