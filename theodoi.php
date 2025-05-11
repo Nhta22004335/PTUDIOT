@@ -131,6 +131,7 @@ try {
         }
 
         let notificationCount = 0;
+        let notifications = []; // Array to store notifications
 
         function toggleThongBao() {
             const container = document.getElementById("thongbao-container");
@@ -170,9 +171,11 @@ try {
             document.getElementById("notification-count").textContent = notificationCount;
             const bell = document.getElementById("nutchuong");
             bell.classList.add("ring");
+            notifications.push(noidung); // Store notification
         }
 
         function kiemTraVaThongBao() {
+            notifications = []; // Reset notifications array
             const sensorValues = {
                 temp: parseFloat(document.getElementById("nd")?.value || 0),
                 humi: parseFloat(document.getElementById("da")?.value || 0),
@@ -239,9 +242,24 @@ try {
             } else if (sensorValues.sieuam < 450) {
                 themThongBao("Mực nước đã đầy!");
             }
+
+            // Send notifications to server for emailing
+            if (notifications.length > 0) {
+                $.ajax({
+                    url: "guiemail.php",
+                    method: "POST",
+                    data: { notifications: JSON.stringify(notifications) },
+                    success: function (response) {
+                        console.log("Email gửi thành công:", response);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Lỗi khi gửi email:", error);
+                    }
+                });
+            }
         }
 
-        setInterval(kiemTraVaThongBao, 120000);
+        setInterval(kiemTraVaThongBao, 60000);
 
         function updateSensorValues() {
             const inputs = document.querySelectorAll("input");
