@@ -136,6 +136,9 @@ if (isset($_SESSION['tendn'])) {
       <a href="nhatkysensor.php" class="block py-2 md:py-0 hover:text-green-600 flex items-center gap-x-1 transition" <?php echo !isset($_SESSION['tendn']) ? 'style="pointer-events: none;"' : ''; ?>>
         <i data-lucide="book-open-check" class="w-4 h-4"></i>Nhật ký Sensor
       </a>
+      <a href="thongkedulieu.php" class="block py-2 md:py-0 hover:text-green-600 flex items-center gap-x-1 transition" <?php echo !isset($_SESSION['tendn']) ? 'style="pointer-events: none;"' : ''; ?>>
+        <i data-lucide="bar-chart-3" class="w-4 h-4"></i>Thống kê dữ liệu
+      </a>
     </nav>
     <div class="relative" id="user-menu" x-data="{ openUser: false }" @click.outside="openUser = false">
       <?php if (isset($_SESSION['tendn'])): ?>
