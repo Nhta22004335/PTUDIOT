@@ -194,7 +194,7 @@ try {
                 themThongBao("🔥💦 Nhiệt độ cao và độ ẩm thấp - nguy cơ héo cây.");
             } else if (sensorValues.temp > 30 && sensorValues.humi > 75) {
                 themThongBao("🔥💧 Nhiệt độ cao và độ ẩm cao - dễ thối rễ.");
-            } else if (sensorValues.temp >= 20 && sensorValues.temp <= 30 && sensorValues.humi >= 50 && sensorValues.humi <= 75) {
+            } else if (sensorValues.temp >= 18 && sensorValues.temp <= 30 && sensorValues.humi >= 50 && sensorValues.humi <= 75) {
                 themThongBao("✅ Điều kiện lý tưởng - cây có sinh trưởng tốt.");
             } else {
                 if (sensorValues.temp < 18) themThongBao("❄️ Cảnh báo: Nhiệt độ thấp.");
@@ -204,13 +204,16 @@ try {
             }
 
             // Ánh sáng
-            if (sensorValues.anhsang > 900) {
-                themThongBao("⚠️ Cần chiếu sáng gấp!");
-            } else if (sensorValues.anhsang > 700) {
-                themThongBao("⚠️ Cần chiếu sáng thêm!");
-            } else if (sensorValues.anhsang > 400) {
-                themThongBao("Mức độ sáng cao!");
+            if (sensorValues.anhsang < 400) {
+                themThongBao("⚠️ Thiếu sáng, cần chiếu sáng thêm!");
+            } else if (sensorValues.anhsang < 700) {
+                themThongBao("Ánh sáng ở mức vừa phải.");
+            } else if (sensorValues.anhsang < 900) {
+                themThongBao("Mức độ sáng cao.");
+            } else {
+                themThongBao("⚠️ Ánh sáng quá mạnh, cần giảm cường độ chiếu sáng!");
             }
+
 
             // Nồng độ khí
             if (sensorValues.nongdokhi < 200) {
