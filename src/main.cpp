@@ -127,34 +127,42 @@ void callback(char* topic, byte* message, unsigned int length) {
       digitalWrite(PIN_RGB_B, LOW);                  // Tắt màu xanh dương
     }
 
-    // Hiển thị trạng thái lên LCD
+    // Hiển thị trạng thái trên LCD
     lcd.clear();                                    // Xóa màn hình LCD
+    // Dòng 1: Motor, Màn che
     lcd.setCursor(0, 0);                            // Đặt con trỏ dòng 1, cột 0
-    lcd.print("Device Status");                     // Hiển thị tiêu đề
+    lcd.print("Mot:");                              // Motor
+    lcd.print(motorbechuanuoc ? "ON " : "OFF ");
+    lcd.setCursor(10, 0);                           // Cột 10, dòng 1
+    lcd.print("MC:");                               // Màn che
+    lcd.print(htmangche ? "ON " : "OFF ");
+
+    // Dòng 2: Phun sương, Quạt
     lcd.setCursor(0, 1);                            // Đặt con trỏ dòng 2, cột 0
-    lcd.print("Mot:");                              // Hiển thị trạng thái Motor
-    lcd.print(motorbechuanuoc ? "ON " : "OFF");
-    lcd.print(" MC:");                              // Hiển thị trạng thái Màn che
-    lcd.print(htmangche ? "ON " : "OFF");
-    lcd.print(" PS:");                              // Hiển thị trạng thái Phun sương
-    lcd.print(htphunsuong ? "ON " : "OFF");
+    lcd.print("PS:");                               // Phun sương
+    lcd.print(htphunsuong ? "ON " : "OFF ");
+    lcd.setCursor(10, 1);                           // Cột 10, dòng 2
+    lcd.print("Quat:");                             // Quạt
+    lcd.print(quatthongio ? "ON " : "OFF ");
+
+    // Dòng 3: Đèn chiếu sáng, LED cảnh báo
     lcd.setCursor(0, 2);                            // Đặt con trỏ dòng 3, cột 0
-    lcd.print("Quat:");                             // Hiển thị trạng thái Quạt
-    lcd.print(quatthongio ? "ON " : "OFF");
-    lcd.print(" DCS:");                             // Hiển thị trạng thái Đèn chiếu sáng
-    lcd.print(htdenchieusang ? "ON " : "OFF");
-    lcd.print(" LCB:");                             // Hiển thị trạng thái LED cảnh báo
-    lcd.print(htledcanhbao ? "ON " : "OFF");
+    lcd.print("DCS:");                              // Đèn chiếu sáng
+    lcd.print(htdenchieusang ? "ON " : "OFF ");
+    lcd.setCursor(10, 2);                           // Cột 10, dòng 3
+    lcd.print("LCB:");                              // LED cảnh báo
+    lcd.print(htledcanhbao ? "ON " : "OFF ");
+
+    // Dòng 4: Còi, Thời gian
     lcd.setCursor(0, 3);                            // Đặt con trỏ dòng 4, cột 0
-    lcd.print("Coi:");                              // Hiển thị trạng thái Còi
-    lcd.print(coibao ? "ON " : "OFF");
-    // Hiển thị thời gian cập nhật
+    lcd.print("Coi:");                              // Còi
+    lcd.print(coibao ? "ON " : "OFF ");
+    lcd.setCursor(10, 3);                           // Cột 10, dòng 4
     unsigned long seconds = millis() / 1000;        // Tính thời gian chạy (giây)
     int hours = seconds / 3600;                     // Tính giờ
     int minutes = (seconds % 3600) / 60;            // Tính phút
     int secs = seconds % 60;                        // Tính giây
-    lcd.setCursor(8, 3);                            // Đặt con trỏ dòng 4, cột 8
-    lcd.printf("T:%02d:%02d:%02d", hours, minutes, secs); // Hiển thị thời gian HH:MM:SS
+    lcd.printf("%02d:%02d:%02d", hours, minutes, secs); // Hiển thị thời gian HH:MM:SS
   } catch (const json::exception& e) {               // Xử lý lỗi khi phân tích JSON
     Serial.print("Lỗi phân tích JSON: ");            // In thông báo lỗi
     Serial.println(e.what());
@@ -316,7 +324,7 @@ void setup() {
   lcd.clear();                                      // Xóa màn hình sau khởi tạo
 
   Serial.println("Setup OK");                       // In thông báo hoàn tất setup
-
+  
   xDataMutex = xSemaphoreCreateMutex();              // Tạo semaphore để đồng bộ hóa dữ liệu
 
   // Tạo tác vụ đọc cảm biến
