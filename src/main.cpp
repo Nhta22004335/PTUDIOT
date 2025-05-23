@@ -10,6 +10,7 @@
 #include <freertos/FreeRTOS.h>      // Thư viện FreeRTOS cho đa nhiệm
 #include <freertos/task.h>          // Thư viện quản lý tác vụ FreeRTOS
 #include <freertos/semphr.h>        // Thư viện semaphore cho đồng bộ hóa
+#include "SPIFFS.h"
 using json = nlohmann::json;        // Định nghĩa alias cho thư viện JSON
 
 // Định nghĩa loại cảm biến DHT và chân kết nối
@@ -324,7 +325,14 @@ void setup() {
   lcd.clear();                                      // Xóa màn hình sau khởi tạo
 
   Serial.println("Setup OK");                       // In thông báo hoàn tất setup
-
+  
+  // Khởi động SPIFFS
+  if (!SPIFFS.begin(true)) {
+    Serial.println("SPIFFS không thể khởi động");
+    return;
+  }
+  Serial.println("SPIFFS khởi động thành công");
+  
   xDataMutex = xSemaphoreCreateMutex();              // Tạo semaphore để đồng bộ hóa dữ liệu
 
   // Tạo tác vụ đọc cảm biến
